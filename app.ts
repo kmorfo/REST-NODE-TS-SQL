@@ -1,8 +1,6 @@
-import dotenv from 'dotenv';
-import Server from './models/server';
 
-//Configuración de DotEnv
-dotenv.config();
+import {Server} from './models';
+
 
 const server = new Server();
 

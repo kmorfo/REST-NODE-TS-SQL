@@ -1,20 +1,19 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 
-import userRoutes from '../routes/usuario';
+import { userRoutes } from '../routes';
 import db from '../database/connection';
+import config from '../config/config';
 
 class Server {
     // private app:express.Application; si tan solo se importa express
     private app: Application;
-    private port: string;
     private apiPaths = {
-        usuarios: '/api/usuarios'
+        users: '/api/users'
     }
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || '8000';
 
         //Metodos iniciales
         this.dbConnection();
@@ -43,12 +42,12 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.apiPaths.usuarios, userRoutes);
+        this.app.use(this.apiPaths.users, userRoutes);
     }
 
     listen(): void {
-        this.app.listen(this.port, () => {
-            console.log(`Servidor corriendo en el puerto ${this.port}`);
+        this.app.listen(config.port, () => {
+            console.log(`Server running on the port ${config.port}`);
         });
     }
 

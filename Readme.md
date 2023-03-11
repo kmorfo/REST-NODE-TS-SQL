@@ -4,6 +4,10 @@ Este repositorio se irá actualizando hasta crear un CRUD con para trabajar con 
 ## Inicialización del proyecto
 Es necesario ejecutar `npm install` para reconstruir los modulos de Node una vez clonado el proyecto, así como crear el archivo .env en el directorio raíz, con el mismo formato que tiene el archivo .env-example
 
+## Peticiones y formato
+Las distintas peticiones y formato para realizar las mismas se pueden consultar en:
+[Node-TS-SQL](https://documenter.getpostman.com/view/16345932/2s935hQ6sK)
+
 ## Pasos para la creación de un proyecto en Typescript y Node
 Este documento le he creado a modo de cheatsheet para realizar distintos proyectos con estas tecnologías, de modo que al iniciar otro proyecto nuevo que no sea un clon de este resulte fácil hacerle y no tener que revisar las documentaciones a corto plazo.
 
