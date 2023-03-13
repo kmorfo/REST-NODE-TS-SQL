@@ -8,6 +8,7 @@ import config from '../config/config';
 class Server {
     // private app:express.Application; si tan solo se importa express
     private app: Application;
+    //Listado con las rutas de la aplicación
     private apiPaths = {
         users: '/api/users'
     }
@@ -24,10 +25,21 @@ class Server {
     async dbConnection() {
         try {
             await db.authenticate();
+
+            //Establecemos parametros iniciales de la base de datos
+            //Se quitara al tener la aplicación completa, tan solo para que cree las tablas sincronizado
+            this.dbInit();
             console.log('DB Online');
         } catch (error: any) {
             throw new Error(error);
         }
+    }
+
+    async dbInit(){
+        //This creates the table,∫ dropping it first if it already existed 
+        // User.sync({ force: true });
+        // Role.sync({ force: true });
+
     }
 
     middlewares() {
@@ -47,7 +59,7 @@ class Server {
 
     listen(): void {
         this.app.listen(config.port, () => {
-            console.log(`Server running on the port ${config.port}`);
+            console.log(`Server is running on ${config.port}`);
         });
     }
 

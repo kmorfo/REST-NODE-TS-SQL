@@ -57,6 +57,9 @@ Una vez realizados los pasos anteriores ya podremos crear nuestros archivos .ts 
 ### Paquetes necesarios
 `npm i express cors dotenv`
 `npm install --save sequelize`
+`npm i bcryptjs`
+`npm i express-validator`
+
 Para sequelize además debemos instalar el driver especifico al servidor de base de datos que utilicemos
 ```
 # One of the following:
@@ -73,6 +76,7 @@ Tenemos toda la documentación en
 Al realizar por primera vez una importación de un modulo, por ejemplo express nos indicará error, informándonos que necesita la definición de tipos del paquete
 `npm i --save-dev @types/express`
 `npm i --save-dev @types/cors`
+`npm i --save-dev @types/bcryptjs`
 
 ### Actualización constante de TSC
 Podemos correr en dos terminales distintas.
@@ -83,3 +87,6 @@ En otra terminal para que se reinicie el servicio de node al realizar cambios
 `nodemon dist/app.js`
 
 Se podría realizar de forma conjunta pero así tendremos mas fácil el consultar los errores y logs
+
+### Parametros aclaraciones sobre Sequelize
+Al definir el modelo podemos establecer distintos parametros de sincronización del modelo con la base de datos, podemos leer mas al respecto [Model synchronization](https://sequelize.org/docs/v6/core-concepts/model-basics/#model-synchronization) 
