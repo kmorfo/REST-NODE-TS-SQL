@@ -1,16 +1,19 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 
-import { userRoutes } from '../routes';
+import { userRoutes,authRoutes } from '../routes';
 import db from '../database/connection';
 import config from '../config/config';
+import {User,Role} from './';
+import { Request } from 'express';
 
 class Server {
     // private app:express.Application; si tan solo se importa express
     private app: Application;
     //Listado con las rutas de la aplicación
     private apiPaths = {
-        users: '/api/users'
+        users: '/api/users',
+        auth: '/api/auth'
     }
 
     constructor() {
@@ -54,6 +57,7 @@ class Server {
     }
 
     routes() {
+        this.app.use(this.apiPaths.auth, authRoutes);
         this.app.use(this.apiPaths.users, userRoutes);
     }
 

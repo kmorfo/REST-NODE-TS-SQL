@@ -1,8 +1,8 @@
-import { Router, Request } from 'express';
+import { Router } from 'express';
 import { check } from 'express-validator';
 
+import { validarJWT, validateFields,isAdminRole,hasRole } from '../middlewares';
 import { isValidRole, existEmail, existUserID } from '../helpers';
-import { validateFields } from '../middlewares';
 
 import { deleteUser, getUser, getUsers, postUser, putUser } from '../controllers';
 
@@ -36,12 +36,12 @@ userRoutes.put('/:id', [
 ], putUser);
 
 userRoutes.delete('/:id', [
+    validarJWT,
+    //isAdminRole, //Fuerza a que el usuario sea solo ADMIN_ROLE
+    hasRole("ADMIN", "SALES"),//Validación del tipo de rol especificado
     check('id', 'Not a valid id').isNumeric(),
     check('id').custom(existUserID),
     validateFields
 ], deleteUser);
 
 export default userRoutes;
-
-//Estoy en el video 134
-// https://www.udemy.com/course/node-de-cero-a-experto/learn/lecture/9644806#overview

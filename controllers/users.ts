@@ -9,10 +9,11 @@ const getUsers = async (req: Request, res: Response) => {
     try {
         const { max = 10, from = 0 } = req.query;
         const query = { state: true };
+        const order = ['id'];
 
         //Se resolveran todas las promesas juntas filtrando los usuarios que esten activos
         const [users, totalUsers] = await Promise.all([
-            User.findAll({ limit: Number(max), offset: Number(from), where: query }),
+            User.findAll({ limit: Number(max), offset: Number(from), where: query, order: order }),
             User.count({ where: query })
         ]);
 
@@ -122,9 +123,11 @@ const deleteUser = async (req: Request, res: Response) => {
 
         //Para la eliminación utiliza la función destroy
         // await usuarioID.destroy();
-
+        
         //Establecer el estado en false para respetar la integridad referencial si tuviera relaciones con otras tablas
-        await User.update({ status: 0 }, { where: { id: id } });
+        await User.update({ state: false }, { where: { id: id } });
+        
+        console.log(id);
 
         res.status(200).json({
             msg: `User with id ${id} was deleted`

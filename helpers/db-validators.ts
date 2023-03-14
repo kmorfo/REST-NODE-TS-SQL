@@ -15,6 +15,7 @@ export const existEmail = async (email: string) => {
 
 export const existUserID = async (id: number) => {
     const user = await User.findByPk(id);
-    if (!user) throw new Error(`The ID ${id} does not exist`);
+    //Ademas de comprobar si existe se comprueba que el usuario este activo
+    if (!user || !user.dataValues.state) throw new Error(`The ID ${id} does not exist`);
 };
 

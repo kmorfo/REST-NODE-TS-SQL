@@ -59,6 +59,8 @@ Una vez realizados los pasos anteriores ya podremos crear nuestros archivos .ts 
 `npm install --save sequelize`
 `npm i bcryptjs`
 `npm i express-validator`
+`npm i jsonwebtoken`
+`npm i uuid`
 
 Para sequelize además debemos instalar el driver especifico al servidor de base de datos que utilicemos
 ```
@@ -77,6 +79,7 @@ Al realizar por primera vez una importación de un modulo, por ejemplo express n
 `npm i --save-dev @types/express`
 `npm i --save-dev @types/cors`
 `npm i --save-dev @types/bcryptjs`
+`npm i --save-dev @types/jsonwebtoken`
 
 ### Actualización constante de TSC
 Podemos correr en dos terminales distintas.
