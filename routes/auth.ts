@@ -2,8 +2,9 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { login } from '../controllers';
+import { googleSignIn, login, renewToken } from '../controllers';
 import { validateFields } from '../middlewares';
+import { validateJWT } from '../middlewares/validate-jwt';
 
 
 const authRoutes = Router();
@@ -14,6 +15,13 @@ authRoutes.post('/login',[
     validateFields
 ],login);
 
-
+authRoutes.post(
+    "/google",[
+        check("id_token", "Google id_token is required").not().isEmpty(),
+        validateFields,
+    ],googleSignIn
+);
+//Renovar el JWT validarJWT 
+authRoutes.get('/renew',validateJWT,renewToken);
 
 export default authRoutes;

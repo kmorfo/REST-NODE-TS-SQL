@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs';
 
 
 import { User } from "../models";
-import { generateJWT } from "../helpers";
+import { generateJWT, googleVerify } from "../helpers";
 
 
 export const login = async (req: Request, res: Response) => {
@@ -50,26 +50,69 @@ export const login = async (req: Request, res: Response) => {
     }
 }
 
+
+export const googleSignIn = async (req: Request, res: Response) => {
+    const { id_token } = req.body;
+
+    try {
+        //Comprobamos el token y obtenemos los datos del mismo
+        const { name,given_name,family_name, img, email  }  = await googleVerify(id_token);
+        
+        let user = await User.findOne({ where: { email } });
+        
+        //Si el usuario no existe lo creamos en la BD
+        if (!user) {
+            const data = {
+                name:given_name,
+                lastname:family_name,
+                email,
+                password: ":P",
+                img,
+                google: true,
+                role: "USER",
+            };
+            user = await User.create({ ...data });
+        }
+        //Si el usuario ya existe podriamos querer actualizar los datos necesarios
+
+        //Si el usuario tiene un estado en la BD en false se deniega el acceso
+        if (!user.dataValues.state)
+            return res
+                .status(401)
+                .json({ msg: "Talk to administrator, user blocked" });
+
+        //Generamos un JWT propio
+        const token = await generateJWT(user.id.toString());
+
+        res.json({ user, token });
+    } catch (error) {
+        res.status(400).json({
+            msg: "The token could not be verified",
+        });
+    }
+};
+
+
 //Renovar el Token
 export const renewToken = async (req: Request, res: Response) => {
-         try {
-            const userAuth = req.userAuth;
-    
-            //Generamos un nuevo JWT a partir del UID del usuario
-            const token = await generateJWT(userAuth.id);
-    
-            // console.log("Obtenidos los datos del usuario", usuarioAuth.email);
-    
-            res.status(200).json({
-                userAuth,
-                token,
-            });
-        } catch (error) {
-            console.log(error);
-            const { message } = error as Error;
-            res.status(500).json({
-                msg: 'Talk to the administrator',
-                message
-            })
-        }
+    try {
+        const userAuth = req.userAuth;
+
+        //Generamos un nuevo JWT a partir del UID del usuario
+        const token = await generateJWT(userAuth.id);
+
+        // console.log("Obtenidos los datos del usuario", usuarioAuth.email);
+
+        res.status(200).json({
+            userAuth,
+            token,
+        });
+    } catch (error) {
+        console.log(error);
+        const { message } = error as Error;
+        res.status(500).json({
+            msg: 'Talk to the administrator',
+            message
+        })
+    }
 };

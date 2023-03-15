@@ -1,4 +1,4 @@
 import { deleteUser, getUser, getUsers, postUser, putUser } from './users';
-import {login,renewToken} from './auth';
+import {login,renewToken,googleSignIn} from './auth';
 
-export{ deleteUser, getUser, getUsers, postUser, putUser,login,renewToken}
+export{ deleteUser, getUser, getUsers, postUser, putUser,login,renewToken,googleSignIn}

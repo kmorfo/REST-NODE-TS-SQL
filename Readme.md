@@ -61,6 +61,7 @@ Una vez realizados los pasos anteriores ya podremos crear nuestros archivos .ts 
 `npm i express-validator`
 `npm i jsonwebtoken`
 `npm i uuid`
+`npm i google-auth-library --save`
 
 Para sequelize además debemos instalar el driver especifico al servidor de base de datos que utilicemos
 ```
@@ -93,3 +94,18 @@ Se podría realizar de forma conjunta pero así tendremos mas fácil el consulta
 
 ### Parametros aclaraciones sobre Sequelize
 Al definir el modelo podemos establecer distintos parametros de sincronización del modelo con la base de datos, podemos leer mas al respecto [Model synchronization](https://sequelize.org/docs/v6/core-concepts/model-basics/#model-synchronization) 
+
+### Google Sign In
+Tal y como nos indica [Google](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid?hl=es-419)
+Inicialmente nos dirigimos a [Google Cloud Platform](https://console.cloud.google.com/welcome), en caso de no tener una cuenta la creamos
+Una vez dentro, creamos un nuevo proyecto, con el nombre deseado, una vez creado le seleccionamos.
+
+Abrimos [API y servicios](https://console.cloud.google.com/apis/dashboard?project=rest-api-typescript) y nos dirigimos a la pantalla de consentimiento. En User Type seleccionamos externo -> Crear y rellenamos al menos los datos obligatorios.
+Una vez creada la pantalla de consentimiento, nos dirigimos a Credenciales +Crear Credenciales -> ID de cliente OAUTH, indicamos el tipo 
+de aplicación que va a utilizar la API. En orígenes autorizados introducimos al menos el http://localhost y http://localhost:puerto, asi como los datos que correspondan, una vez tengamos el dominio IP final de la aplicación se debera agregar a los orígenes autorizados.
+Al finalizar nos mostrara el ID cliente y el secret, que almacenaremos en nuestras variables de entorno .env
+
+Se ha agregado en la carpeta public/index.html el codigo para hacer un login/logout con JS, de la misma forma nos redirecciona al servidor local a la ruta /api/auth/google para que sea despues nuestro servidor el que de paso al usuario
+
+
+
