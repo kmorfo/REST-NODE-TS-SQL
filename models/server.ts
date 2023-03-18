@@ -1,10 +1,10 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 
-import { userRoutes,authRoutes } from '../routes';
+import { userRoutes, authRoutes, categoryRoutes ,productRoutes} from '../routes';
 import db from '../database/connection';
 import config from '../config/config';
-import {User,Role} from './';
+import { User, Role, Category,Product } from './';
 import { Request } from 'express';
 
 class Server {
@@ -12,8 +12,10 @@ class Server {
     private app: Application;
     //Listado con las rutas de la aplicación
     private apiPaths = {
-        users: '/api/users',
-        auth: '/api/auth'
+        auth: '/api/auth',
+        category: '/api/categories',
+        products: '/api/products',
+        users: '/api/users'
     }
 
     constructor() {
@@ -38,10 +40,15 @@ class Server {
         }
     }
 
-    async dbInit(){
-        //This creates the table,∫ dropping it first if it already existed 
-        // User.sync({ force: true });
-        // Role.sync({ force: true });
+    async dbInit() {
+
+        //Declaro las asociaciones 
+        User.associate();
+        Category.associate();
+
+        //Sincronizamos con la base de datos
+        db.sync();
+        // Category.sync({force:true});
 
     }
 
@@ -59,6 +66,8 @@ class Server {
     routes() {
         this.app.use(this.apiPaths.auth, authRoutes);
         this.app.use(this.apiPaths.users, userRoutes);
+        this.app.use(this.apiPaths.category, categoryRoutes);
+        this.app.use(this.apiPaths.products, productRoutes);
     }
 
     listen(): void {

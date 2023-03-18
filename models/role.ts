@@ -23,7 +23,7 @@ Role.init({
         allowNull: false,
         validate: {
             notNull: {
-                msg: 'Please enter the enter role name.'
+                msg: 'Please enter the role name.'
             }
         }
     },

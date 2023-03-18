@@ -3,6 +3,7 @@ import bcryptjs from 'bcryptjs';
 import { Error } from "sequelize";
 
 import { User } from '../models';
+import Category from '../models/category';
 
 const getUsers = async (req: Request, res: Response) => {
 
@@ -101,7 +102,6 @@ const putUser = async (req: Request, res: Response) => {
             });
         }
 
-
         //Actualizamos los datos del usu sario a partir de lo enviado en el body
         await User.update({ email, ...rest }, { where: { id: id } });//Devuelve el numero de columas afectadas
         const user = await User.findByPk(id);
@@ -123,10 +123,10 @@ const deleteUser = async (req: Request, res: Response) => {
 
         //Para la eliminación utiliza la función destroy
         // await usuarioID.destroy();
-        
+
         //Establecer el estado en false para respetar la integridad referencial si tuviera relaciones con otras tablas
         await User.update({ state: false }, { where: { id: id } });
-        
+
         console.log(id);
 
         res.status(200).json({

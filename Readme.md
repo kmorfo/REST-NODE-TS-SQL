@@ -62,6 +62,7 @@ Una vez realizados los pasos anteriores ya podremos crear nuestros archivos .ts 
 `npm i jsonwebtoken`
 `npm i uuid`
 `npm i google-auth-library --save`
+`npm i sequelize-typescript`
 
 Para sequelize además debemos instalar el driver especifico al servidor de base de datos que utilicemos
 ```
@@ -107,5 +108,7 @@ Al finalizar nos mostrara el ID cliente y el secret, que almacenaremos en nuestr
 
 Se ha agregado en la carpeta public/index.html el codigo para hacer un login/logout con JS, de la misma forma nos redirecciona al servidor local a la ruta /api/auth/google para que sea despues nuestro servidor el que de paso al usuario
 
-
+### Relaciones de tablas con sequelize
+[Relaciones](https://doc.esdoc.org/github.com/sequelize/sequelize/manual/typescript.html)
+[Mas sobre relaciones](https://sequelize.org/docs/v6/core-concepts/assocs/)
 
