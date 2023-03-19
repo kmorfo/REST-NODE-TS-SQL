@@ -6,13 +6,15 @@ import { isValidRole, existEmail, existUserID } from '../helpers';
 
 import { deleteUser, getUser, getUsers, postUser, putUser } from '../controllers';
 
-
+/**
+ * {{url}}/api/users
+*/
 const userRoutes = Router();
 
 userRoutes.get('/', getUsers);
 
 userRoutes.get('/:id', [
-    check('id', 'Not a valid id').isNumeric(),
+    check('id', 'Its not  a valid id').isNumeric(),
     check('id').custom(existUserID),
     validateFields
 ], getUser);
@@ -29,7 +31,7 @@ userRoutes.post('/', [
 ], postUser);
 
 userRoutes.put('/:id', [
-    check('id', 'Not a valid id').isNumeric(),
+    check('id', 'Its not  a valid id').isNumeric(),
     check('id').custom(existUserID),
     //check("role").custom(isValidRole), //De esta forma se tendria que enviar un rol valido
     validateFields
@@ -39,7 +41,7 @@ userRoutes.delete('/:id', [
     validarJWT,
     //isAdminRole, //Fuerza a que el usuario sea solo ADMIN_ROLE
     hasRole("ADMIN", "SALES"),//Validación del tipo de rol especificado
-    check('id', 'Not a valid id').isNumeric(),
+    check('id', 'Its not  a valid id').isNumeric(),
     check('id').custom(existUserID),
     validateFields
 ], deleteUser);

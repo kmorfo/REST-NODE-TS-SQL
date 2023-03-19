@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { User } from "../models";
 
-export const isAdminRole = (req:Request, res :Response, next:NextFunction) => {
+export const isAdminRole = (req:Request , res :Response, next:NextFunction) => {
     //Comprobamos que tenemos los datos del usuario
     if (!req.userAuth)
         return res
@@ -23,7 +24,8 @@ export const isAdminRole = (req:Request, res :Response, next:NextFunction) => {
  * @returns 
  */
 export const hasRole = (...roles:String[]) => {
-    return (req:Request, res:Response, next:NextFunction) => {
+    return (req:Request , res:Response, next:NextFunction) => {
+
         //Comprobamos que tenemos los datos del usuario
         if (!req.userAuth)
             return res.status(500).json({

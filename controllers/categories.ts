@@ -9,7 +9,7 @@ const getCategories = async (req: Request, res: Response) => {
         const query = { state: true };
         const order = ['id'];
 
-        //Se resolveran todas las promesas juntas filtrando los usuarios que esten activos
+        //Se resolveran todas las promesas juntas filtrando las categorias que esten activos
         const [categories, totalCategories] = await Promise.all([
             Category.findAll({ limit: Number(max), offset: Number(from), where: query, order: order }),
             Category.count({ where: query })

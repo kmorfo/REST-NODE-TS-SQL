@@ -8,11 +8,12 @@ import {
 
 import db from '../database/connection';
 import Category from './category';
+import Product from './product';
 
 /* {
     id:1
     name:'Raúl',
-    lastname:'Luján',
+    lastname:'Apellido',
     email:'raul@test.es'
     password:'1324cifrado',
     image:'rutadelaimg',
@@ -22,18 +23,21 @@ import Category from './category';
 } */
 enum Roles { 'USER', 'ADMIN', 'SALES' }
 
-class User extends Model {
-    declare id: number;
+class User extends Model<InferAttributes<User, { omit: 'categories'| 'products' }>,
+    InferCreationAttributes<User, { omit: 'categories'| 'products' }>>  {
+    declare id: CreationOptional<number>;
     declare name: string;
     declare lastname: string;
     declare email: string;
     declare password: string;
     declare image: string;
-    declare role: Roles;
-    declare state: boolean;
-    declare google: boolean;
-    declare createdAt: Date;
-    declare updatedAt: Date;
+    declare role: CreationOptional<string>;
+    declare state: CreationOptional<boolean>;
+    declare google: CreationOptional<boolean>;
+    
+    // createdAt updatedAt can be undefined during creation
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 
 
     // Funciones de Sequelize para la relación, se pueden agregar o quitar segun necesitemos
@@ -46,27 +50,49 @@ class User extends Model {
     declare hasCategory: HasManyHasAssociationMixin<Category, number>;
     declare hasCategories: HasManyHasAssociationsMixin<Category, number>;
     declare countCategories: HasManyCountAssociationsMixin;
-    declare createCategory: HasManyCreateAssociationMixin<Category, 'ownerId'>;
+    declare createCategory: HasManyCreateAssociationMixin<Category, 'UserId'>;
+
+    // Funciones de Sequelize para la relación con los products, se pueden agregar o quitar segun necesitemos
+    declare getProducts: HasManyGetAssociationsMixin<Product>;
+    declare addProduct: HasManyAddAssociationMixin<Product, number>;
+    declare addProducts: HasManyAddAssociationsMixin<Product, number>;
+    declare setProduct: HasManySetAssociationsMixin<Product, number>;
+    declare removeProduct: HasManyRemoveAssociationMixin<Category, number>;
+    declare removeProducts: HasManyRemoveAssociationsMixin<Product, number>;
+    declare hasProduct: HasManyHasAssociationMixin<Product, number>;
+    declare hasProducts: HasManyHasAssociationsMixin<Product, number>;
+    declare countProduct: HasManyCountAssociationsMixin;
+    declare createProduct: HasManyCreateAssociationMixin<Product, 'UserId'>;
 
 
     // También puede predeclarar posibles inclusiones
     declare categories?: NonAttribute<Category[]>;
+    declare products?: NonAttribute<Category[]>;
 
-    //Se declara la asociacion de categories con el tipo Categoria
+    //Se declara la asociacion de categories con el tipo Categoria asi como los productos
     declare static associations: {
         categories: Association<User, Category>;
+        products: Association<User, Product>;
     };
 
-    // Define la relación hasMany con el modelo Category
+    // Define la relación hasMany con el modelo Category y Product
     static associate() {
         User.hasMany(Category, {
             foreignKey: 'UserId',
             as: 'categories',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+        });
+        User.hasMany(Product, {
+            foreignKey: 'UserId',
+            as: 'products',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
         });
     }
 
     //Se sobreescribe el metodo para ajustar los parametros devueltos al usuario
-    public toJSON(): User {
+    public toJSON() {
         //Extraemos los elementos que no queremos retornar
         const { password, role, state, createdAt, updatedAt, ...object } = this.dataValues;
         return object;

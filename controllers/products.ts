@@ -1,23 +1,24 @@
 import { Request, Response } from "express";
 
-import { Error } from "sequelize";
+import { Error, Op } from "sequelize";
 import { Product, Category, User } from "../models";
 
+
 const getProducts = async (req: Request, res: Response) => {
-/*     try {
+    try {
         const { max = 10, from = 0 } = req.query;
         const query = { state: true };
         const order = ['id'];
 
-        //Se resolveran todas las promesas juntas filtrando los usuarios que esten activos
-        const [categories, totalCategories] = await Promise.all([
-            Category.findAll({ limit: Number(max), offset: Number(from), where: query, order: order }),
-            Category.count({ where: query })
+        //Se resolveran todas las promesas juntas filtrando los productos que esten activos
+        const [products, totalProducts] = await Promise.all([
+            Product.findAll({ limit: Number(max), offset: Number(from), where: query, order: order }),
+            Product.count({ where: query })
         ]);
 
         res.status(200).json({
-            total: totalCategories,
-            categories
+            total: totalProducts,
+            products
         });
     } catch (error) {
         console.log(error);
@@ -26,53 +27,52 @@ const getProducts = async (req: Request, res: Response) => {
             msg: 'Talk to the administrator',
             message
         })
-    } */
-    res.status(200).json({"msg":"getProducts"});
+    }
+
 }
 
 const getProduct = async (req: Request, res: Response) => {
-     const { id } = req.params;
-/*
-    const category = await Category.findByPk(id);
+    const { id } = req.params;
 
-    if (!category) {
-        return res.status(404).json({
-            msg: `There is no category with the id ${id}`
-        });
-    }
+    const product = await Product.findByPk(id);
 
-    res.status(200).json(category); */
-    res.status(200).json({"msg":`getProduct ${id}`});
+    res.status(200).json(product);
 }
+
 
 const postProduct = async (req: Request, res: Response) => {
     const { body } = req;
 
     try {
-        res.status(200).json({"msg":"postProducts"});
-/*         //Solo obtendremos del body los parametros que necesitamos, limitando posibles errores
-        let { name } = body;
+        //Solo obtendremos del body los parametros que necesitamos, limitando posibles errores
+        let { name, description, price, categoryId } = body;
         name = name.toUpperCase()
 
-        //Obtenemos los datos del usuario autenticado para crear la categoria asignada a este
+        //Obtenemos los datos del usuario autenticado para crear el producto asignada a este
         const user = await User.findByPk(req.userAuth.id);
         if (!user) return res.status(400).json({ msg: `User not found.` });
 
-        //Comprobamos que no existe una categoria con ese nombre ya que es unico
-        const categoryExist = await Category.findOne({ where: { name } });
+        const category = await Category.findByPk(categoryId);
+        if (!category) return res.status(400).json({ msg: `Category not found.` });
 
-        if (categoryExist)
+        //Comprobamos que no existe un producto con ese nombre ya que es unico
+        const productExist = await Product.findOne({ where: { name } });
+
+        if (productExist)
             return res.status(400).json({
-                msg: `There is already a category with the name ${name}`
+                msg: `There is already a produtc with the name ${name}`
             });
 
-        const category = await user.createCategory({ name: name });
+        const UserId = user.id;
+        const CategoryId = category.id;
+        // const product = Product.create({ name, price, description, UserId, CategoryId });
+        const product = await category.createProduct({ name, price, description, UserId });
 
         res.status(201).json({
-            category,
+            product,
             username: user.name,
-            userId: user.id
-        }); */
+            category: category.name
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: 'Talk to the administrator' });
@@ -82,48 +82,40 @@ const postProduct = async (req: Request, res: Response) => {
 const putProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     //Solo obtendremos del body los parametros que necesitamos, limitando posibles errores
-    let { name } = req.body;
+    let { name, description, price } = req.body;
     name = name.toUpperCase()
-    res.status(200).json({"msg":"putProduct"});
 
-/*     try {
-        //Comprobamos que no existe una categoria con ese nombre ya que es unico
-        const categoryExist = await Category.findOne({ where: { name } });
+    try {
+        await Product.update({ name, description, price }, { where: { id } });
 
-        if (categoryExist)
-            return res.status(400).json({ msg: `There is already a category with the name ${name}` });
-
-        await Category.update({ name }, { where: { id } });
-
-        res.status(201).json({ msg: `The category ${name} has been updated` });
+        res.status(201).json({ msg: `The product ${name} has been updated` });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: 'Talk to the administrator' });
-    } */
+    }
 }
 
 const deleteProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
+    try {
+        const product = await Product.findByPk(id);
 
-/*     try {
-        const category = await Category.findByPk(id);
-
-        if (!category)
+        if (!product)
             return res.status(400).json({
-                msg: `Category not found.`
+                msg: `Product not found.`
             });
 
-        category.state = false;
-        category.save();
+        product.state = false;
+        product.save();
 
-        res.status(201).json(category);
+        res.status(201).json({ "msg": `Product with id ${id} was deleted` });
     } catch (error) {
         console.log(error);
         res.status(500).json({
             msg: 'Talk to the administrator'
         })
-    } */
-    res.status(200).json({"msg":"deleteProduct"});
+    }
+
 }
 
 export { getProduct, getProducts, postProduct, putProduct, deleteProduct };

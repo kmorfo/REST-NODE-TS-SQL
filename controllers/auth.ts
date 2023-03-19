@@ -6,13 +6,13 @@ import { User } from "../models";
 import { generateJWT, googleVerify } from "../helpers";
 
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request , res: Response) => {
     //Extraemos los datos del body que nos envio el usuario
     const { email, password } = req.body;
 
     try {
         //Obtenemos el usuario a partir del email para realizar las comprobaciones
-        const user = await User.findOne({ where: { email } });
+        const user:User|null = await User.findOne({ where: { email } });
 
         //TODO: Las respuestas con errores se tendran que corregir para no dar pistas al usuario de cual es el error y cuentas activas
         //Verificar si el email existe
@@ -37,7 +37,8 @@ export const login = async (req: Request, res: Response) => {
         //Generar el JWT
         const token = await generateJWT(user.id.toString());
 
-        req.userAuth = user;
+        // req.userAuth = user;
+        req.userAuth = new User();
 
         res.status(200).json({ msg: 'Login ok', user, token });
     } catch (error) {
@@ -67,7 +68,7 @@ export const googleSignIn = async (req: Request, res: Response) => {
                 lastname:family_name,
                 email,
                 password: ":P",
-                img,
+                image:img,
                 google: true,
                 role: "USER",
             };
@@ -99,7 +100,7 @@ export const renewToken = async (req: Request, res: Response) => {
         const userAuth = req.userAuth;
 
         //Generamos un nuevo JWT a partir del UID del usuario
-        const token = await generateJWT(userAuth.id);
+        const token = await generateJWT(userAuth.id as unknown as string);
 
         // console.log("Obtenidos los datos del usuario", usuarioAuth.email);
 

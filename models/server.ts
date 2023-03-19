@@ -1,11 +1,12 @@
 import express, { Application } from 'express';
+import fileupload from 'express-fileupload';
+
 import cors from 'cors';
 
-import { userRoutes, authRoutes, categoryRoutes ,productRoutes} from '../routes';
+import { userRoutes, authRoutes, categoryRoutes ,productRoutes, searchRoutes, uploadRoutes} from '../routes';
 import db from '../database/connection';
 import config from '../config/config';
 import { User, Role, Category,Product } from './';
-import { Request } from 'express';
 
 class Server {
     // private app:express.Application; si tan solo se importa express
@@ -13,9 +14,11 @@ class Server {
     //Listado con las rutas de la aplicación
     private apiPaths = {
         auth: '/api/auth',
+        search:      "/api/search",
         category: '/api/categories',
         products: '/api/products',
-        users: '/api/users'
+        users: '/api/users',
+        uploads: '/api/uploads'
     }
 
     constructor() {
@@ -45,10 +48,15 @@ class Server {
         //Declaro las asociaciones 
         User.associate();
         Category.associate();
+        Product.associate();
 
         //Sincronizamos con la base de datos
         db.sync();
+
+        //Si tan solo queremos que nos cree las tablas y las borre
+        // User.sync({force:true}); 
         // Category.sync({force:true});
+        // Product.sync({force:true});
 
     }
 
@@ -61,13 +69,24 @@ class Server {
 
         //Carpeta publica
         this.app.use(express.static('public'));
+
+        //Configuramos express-Fileuploads
+        this.app.use(
+            fileupload({
+                useTempFiles:     true,
+                tempFileDir:      "/tmp/",
+                createParentPath: true,
+            })
+        );
     }
 
     routes() {
         this.app.use(this.apiPaths.auth, authRoutes);
+        this.app.use(this.apiPaths.search, searchRoutes);
         this.app.use(this.apiPaths.users, userRoutes);
         this.app.use(this.apiPaths.category, categoryRoutes);
         this.app.use(this.apiPaths.products, productRoutes);
+        this.app.use(this.apiPaths.uploads, uploadRoutes);
     }
 
     listen(): void {

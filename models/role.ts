@@ -10,6 +10,7 @@ import db from '../database/connection';
 
 class Role extends Model{
     declare id:number;
+    declare name:number;
 }
 
 Role.init({
@@ -21,6 +22,7 @@ Role.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique:true,
         validate: {
             notNull: {
                 msg: 'Please enter the role name.'

@@ -59,10 +59,12 @@ Una vez realizados los pasos anteriores ya podremos crear nuestros archivos .ts 
 `npm install --save sequelize`
 `npm i bcryptjs`
 `npm i express-validator`
+`npm i express-fileupload`
 `npm i jsonwebtoken`
 `npm i uuid`
 `npm i google-auth-library --save`
 `npm i sequelize-typescript`
+`npm i cloudinary`
 
 Para sequelize además debemos instalar el driver especifico al servidor de base de datos que utilicemos
 ```
@@ -82,6 +84,7 @@ Al realizar por primera vez una importación de un modulo, por ejemplo express n
 `npm i --save-dev @types/cors`
 `npm i --save-dev @types/bcryptjs`
 `npm i --save-dev @types/jsonwebtoken`
+`npm i --save-dev @types/express-fileupload`
 
 ### Actualización constante de TSC
 Podemos correr en dos terminales distintas.
@@ -111,4 +114,5 @@ Se ha agregado en la carpeta public/index.html el codigo para hacer un login/log
 ### Relaciones de tablas con sequelize
 [Relaciones](https://doc.esdoc.org/github.com/sequelize/sequelize/manual/typescript.html)
 [Mas sobre relaciones](https://sequelize.org/docs/v6/core-concepts/assocs/)
+
 

@@ -1,4 +1,4 @@
-import { LoginTicket, OAuth2Client } from "google-auth-library";
+import { LoginTicket, OAuth2Client, TokenPayload } from "google-auth-library";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function googleVerify(token: string) {
@@ -13,14 +13,17 @@ export async function googleVerify(token: string) {
         name es nombre y apellidos
         given_name nombre
         family_name apellidos */
-    const { name, given_name, family_name, picture, email } = ticket.getPayload();
+    
+    //Lo podriamos realizar con desectructuracion y obtener los datos directamente o bien obtener el payload y coger los datos
+    //const { name, given_name, family_name, picture, email }:TokenPayload | undefined = ticket.getPayload();
+    const payload :TokenPayload | undefined = ticket.getPayload();
 
     return {
-        name,
-        given_name,
-        family_name,
-        img: picture,
-        email,
+        name:payload?.name ,
+        given_name:payload?.given_name,
+        family_name:payload?.family_name,
+        img: payload?.picture,
+        email:payload?.email,
     };
 }
 

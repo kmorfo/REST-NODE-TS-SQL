@@ -3,7 +3,6 @@ import bcryptjs from 'bcryptjs';
 import { Error } from "sequelize";
 
 import { User } from '../models';
-import Category from '../models/category';
 
 const getUsers = async (req: Request, res: Response) => {
 
@@ -96,7 +95,7 @@ const putUser = async (req: Request, res: Response) => {
         //TODO: Con la authenticacion se validara el email con el del user autenticado
         //Comprobamos que no existe un usuario con el mismo email antes de poder actualizarlo
         const existsEmail = await User.findOne({ where: { email } });
-        if (existsEmail && existsEmail.dataValues.id != id) {
+        if ((existsEmail && (existsEmail.dataValues.id as unknown as string)) != id) {
             return res.status(400).json({
                 msg: `The email ${email} is already registered`
             });
