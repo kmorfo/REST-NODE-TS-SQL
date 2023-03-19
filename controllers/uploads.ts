@@ -4,6 +4,7 @@ import fs from "fs";
 
 import { uploadFile } from "../helpers";
 import {User,Product,Category} from '../models';
+import { UploadedFile } from "express-fileupload";
 
 //Importación y config para trabajar con cloudDinary
 const cloudDinary = require("cloudinary").v2;
@@ -161,7 +162,7 @@ export const updateImageCloudDinary = async (req:Request, res :Response) => {
     }
 
     //Obtenemos el path temporal del archivo para subirlo
-    const { tempFilePath } = req.files.image;
+    const { tempFilePath } = req.files!.image as UploadedFile;
     
     //Subimos el archivo a CloudDinary
     const { secure_url } = await cloudDinary.uploader.upload(tempFilePath);

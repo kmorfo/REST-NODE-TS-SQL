@@ -8,6 +8,20 @@ import db from '../database/connection';
 import config from '../config/config';
 import { User, Role, Category,Product } from './';
 
+//Se modifica globalmente Express Request para que contenga la variable userAuth que sea utilizada al verificar
+declare global {
+    namespace Express {
+        interface Request {
+            userAuth? : User
+        }
+    }
+}
+declare global {
+    interface JwtPayload {
+        id: string
+      }
+}
+
 class Server {
     // private app:express.Application; si tan solo se importa express
     private app: Application;

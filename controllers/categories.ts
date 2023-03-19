@@ -52,7 +52,7 @@ const postCategory = async (req: Request, res: Response) => {
         name = name.toUpperCase()
 
         //Obtenemos los datos del usuario autenticado para crear la categoria asignada a este
-        const user = await User.findByPk(req.userAuth.id);
+        const user = await User.findByPk(req.userAuth!.id);
         if (!user) return res.status(400).json({ msg: `User not found.` });
 
         //Comprobamos que no existe una categoria con ese nombre ya que es unico

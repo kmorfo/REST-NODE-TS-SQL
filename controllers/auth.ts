@@ -64,11 +64,11 @@ export const googleSignIn = async (req: Request, res: Response) => {
         //Si el usuario no existe lo creamos en la BD
         if (!user) {
             const data = {
-                name:given_name,
-                lastname:family_name,
-                email,
+                name:given_name!,
+                lastname:family_name!,
+                email:email!,
                 password: ":P",
-                image:img,
+                image:img!,
                 google: true,
                 role: "USER",
             };
@@ -98,9 +98,9 @@ export const googleSignIn = async (req: Request, res: Response) => {
 export const renewToken = async (req: Request, res: Response) => {
     try {
         const userAuth = req.userAuth;
-
+     
         //Generamos un nuevo JWT a partir del UID del usuario
-        const token = await generateJWT(userAuth.id as unknown as string);
+        const token = await generateJWT(userAuth!.id as unknown as string);
 
         // console.log("Obtenidos los datos del usuario", usuarioAuth.email);
 

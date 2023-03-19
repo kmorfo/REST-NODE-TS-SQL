@@ -12,7 +12,7 @@ export const validateJWT = async (req: Request, res: Response, next: NextFunctio
     //Validamos el token, si no es valido se ejecuta el catch
     try {
         //TS se queja ya que id dentro del token lo pusimos al crearle
-        const { id } = jwt.verify(token, process.env.JWT_KEY as string);
+        const { id } = jwt.verify(token, process.env.JWT_KEY as string) as JwtPayload;
 
         //Obtener los datos del usuario que corresponde con el uid
         const userAuth = await User.findByPk(id);

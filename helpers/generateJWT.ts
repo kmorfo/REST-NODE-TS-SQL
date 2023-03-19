@@ -23,8 +23,7 @@ export const generateJWT = (id: string) => {
 export const checkJWT = (token: string) => {
     //Validamos que el token existe y es valido
     try {
-        const { id } = jwt.verify(token, process.env.JWT_KEY as string);
-
+        const { id } = jwt.verify(token, process.env.JWT_KEY as string) as JwtPayload;
         return [true, id];
     } catch (error) {
         return [false, null];

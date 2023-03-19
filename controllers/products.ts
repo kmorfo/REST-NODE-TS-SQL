@@ -49,7 +49,7 @@ const postProduct = async (req: Request, res: Response) => {
         name = name.toUpperCase()
 
         //Obtenemos los datos del usuario autenticado para crear el producto asignada a este
-        const user = await User.findByPk(req.userAuth.id);
+        const user = await User.findByPk(req.userAuth!.id);
         if (!user) return res.status(400).json({ msg: `User not found.` });
 
         const category = await Category.findByPk(categoryId);
